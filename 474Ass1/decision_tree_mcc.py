@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size = 0.2
 
 # Make a decision tree
 tree = DecisionTreeClassifier().fit(X_train, y_train)
-#tree.predict(X_test)
+
 path = tree.cost_complexity_pruning_path(X_train, y_train)
 ccp_alphas, impurities = path.ccp_alphas, path.impurities
 
@@ -49,17 +49,37 @@ print(
 
 trees = trees[:-1]
 ccp_alphas = ccp_alphas[:-1]
+"""
+    node_counts = [tree.tree_.node_count for tree in trees]
+    depth = [tree.tree_.max_depth for tree in trees]
 
-node_counts = [tree.tree_.node_count for tree in trees]
-depth = [tree.tree_.max_depth for tree in trees]
+    fig, ax = plt.subplots(2, 1)
+    ax[0].plot(ccp_alphas, node_counts, marker="o", drawstyle="steps-post")
+    ax[0].set_xlabel("alpha")
+    ax[0].set_ylabel("number of nodes")
+    ax[0].set_title("Number of nodes vs alpha")
+    ax[1].plot(ccp_alphas, depth, marker="o", drawstyle="steps-post")
+    ax[1].set_xlabel("alpha")
+    ax[1].set_ylabel("depth of tree")
+    ax[1].set_title("Depth vs alpha")
+    fig.tight_layout()
 
-fig, ax = plt.subplots(2, 1)
-ax[0].plot(ccp_alphas, node_counts, marker="o", drawstyle="steps-post")
-ax[0].set_xlabel("alpha")
-ax[0].set_ylabel("number of nodes")
-ax[0].set_title("Number of nodes vs alpha")
-ax[1].plot(ccp_alphas, depth, marker="o", drawstyle="steps-post")
-ax[1].set_xlabel("alpha")
-ax[1].set_ylabel("depth of tree")
-ax[1].set_title("Depth vs alpha")
-fig.tight_layout()
+    plt.show()
+"""
+
+# Make prediction?
+
+train_scores = [clf.score(X_train, y_train) for clf in trees]
+test_scores = [clf.score(X_test, y_test) for clf in trees]
+
+fig, ax = plt.subplots()
+ax.set_xlabel("alpha")
+ax.set_ylabel("accuracy")
+ax.set_title("Accuracy vs alpha for training and testing sets")
+ax.plot(ccp_alphas, train_scores, marker="o", label="train", drawstyle="steps-post")
+ax.plot(ccp_alphas, test_scores, marker="o", label="test", drawstyle="steps-post")
+ax.legend()
+plt.show()
+
+
+## So i think that i made a decision tree with minimal cost complexity pruning here?
