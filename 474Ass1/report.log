@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.23)  31 JAN 2025 10:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.23)  31 JAN 2025 14:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -335,7 +335,17 @@ tex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count302
 \l__pdf_internal_box=\box56
-) (report.aux)
+) (report.aux
+
+LaTeX Warning: Label `fig:mcc' multiply defined.
+
+
+LaTeX Warning: Label `fig:mcc' multiply defined.
+
+
+LaTeX Warning: Label `fig:mcc' multiply defined.
+
+)
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
@@ -486,11 +496,14 @@ png  used on input line 90.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-File: figures/Reduced Error Pruning/gini tree.png Graphic file (type png)
-<use figures/Reduced Error Pruning/gini tree.png>
-Package pdftex.def Info: figures/Reduced Error Pruning/gini tree.png  used on i
-nput line 101.
-(pdftex.def)             Requested size: 362.37569pt x 241.58163pt.
+<figures/Reduced Error Pruning/gini alpha vs accuracy.png, id=83, 722.7pt x 361
+.35pt>
+File: figures/Reduced Error Pruning/gini alpha vs accuracy.png Graphic file (ty
+pe png)
+<use figures/Reduced Error Pruning/gini alpha vs accuracy.png>
+Package pdftex.def Info: figures/Reduced Error Pruning/gini alpha vs accuracy.p
+ng  used on input line 101.
+(pdftex.def)             Requested size: 362.37569pt x 181.18733pt.
 
 
 [2]
@@ -498,7 +511,7 @@ nput line 101.
 [3 <./figures/Reduced Error Pruning/raw_tree.png> <./figures/Reduced Error Prun
 ing/ccp tree.png> <./figures/Reduced Error Pruning/error_tree.png> <./figures/R
 educed Error Pruning/gini tree.png>]
-<figures/Reduced Error Pruning/alpha vs accuracy.png, id=98, 722.7pt x 361.35pt
+<figures/Reduced Error Pruning/alpha vs accuracy.png, id=99, 722.7pt x 361.35pt
 >
 File: figures/Reduced Error Pruning/alpha vs accuracy.png Graphic file (type pn
 g)
@@ -508,45 +521,105 @@ sed on input line 112.
 (pdftex.def)             Requested size: 362.37569pt x 181.18733pt.
 
 
-[4 <./figures/CCP/Accuracy vs alpha for train and test sets.png>]
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[5 <./figures/Reduced Error Pruning/alpha vs accuracy.png>]
+<figures/Random Forests/Feature Importance.png, id=100, 462.528pt x 346.896pt>
+File: figures/Random Forests/Feature Importance.png Graphic file (type png)
+<use figures/Random Forests/Feature Importance.png>
+Package pdftex.def Info: figures/Random Forests/Feature Importance.png  used on
+ input line 123.
+(pdftex.def)             Requested size: 362.37569pt x 271.79521pt.
 
-[6] (report.aux)
+
+[4 <./figures/CCP/Accuracy vs alpha for train and test sets.png> <./figures/Red
+uced Error Pruning/gini alpha vs accuracy.png>]
+<figures/Random Forests/Max depth vs error rate.png, id=109, 722.7pt x 361.35pt
+>
+File: figures/Random Forests/Max depth vs error rate.png Graphic file (type png
+)
+<use figures/Random Forests/Max depth vs error rate.png>
+Package pdftex.def Info: figures/Random Forests/Max depth vs error rate.png  us
+ed on input line 130.
+(pdftex.def)             Requested size: 362.37569pt x 181.18733pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<figures/Random Forests/Number of trees vs error rate.png, id=110, 722.7pt x 36
+1.35pt>
+File: figures/Random Forests/Number of trees vs error rate.png Graphic file (ty
+pe png)
+<use figures/Random Forests/Number of trees vs error rate.png>
+Package pdftex.def Info: figures/Random Forests/Number of trees vs error rate.p
+ng  used on input line 137.
+(pdftex.def)             Requested size: 362.37569pt x 181.18733pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+
+[5 <./figures/Reduced Error Pruning/alpha vs accuracy.png> <./figures/Random Fo
+rests/Feature Importance.png>]
+
+[6 <./figures/Random Forests/Max depth vs error rate.png> <./figures/Random For
+ests/Number of trees vs error rate.png>]
+Overfull \hbox (8.02283pt too wide) in paragraph at lines 163--167
+\OT1/cmr/m/n/12 The OOB er-ror es-ti-mate was com-puted us-ing a Ran-dom For-es
+t clas-si-fier with \OT1/cmtt/m/n/12 n[]estimators
+ []
+
+
+LaTeX Warning: File `figures/oob_error_plot.png' not found on input line 171.
+
+
+! Package pdftex.def Error: File `figures/oob_error_plot.png' not found: using 
+draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.171 ....8\linewidth]{figures/oob_error_plot.png}
+                                                  
+? 
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+
+[7]
+
+[8] (report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-25>
  ***********
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
-
-Package rerunfilecheck Warning: File `report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `report.out':
-(rerunfilecheck)             Before: 16DD40F49E601B5C111F2749667CFAFB;2053
-(rerunfilecheck)             After:  FA4C89D1AB495D895705EB43494CCB50;2053.
+Package rerunfilecheck Info: File `report.out' has not changed.
+(rerunfilecheck)             Checksum: FA4C89D1AB495D895705EB43494CCB50;2053.
  ) 
 Here is how much of TeX's memory you used:
- 11780 strings out of 473536
- 188364 string characters out of 5714956
- 585661 words of memory out of 5000000
- 34845 multiletter control sequences out of 15000+600000
- 568237 words of font info for 72 fonts, out of 8000000 for 9000
+ 11852 strings out of 473536
+ 191261 string characters out of 5714956
+ 586111 words of memory out of 5000000
+ 34907 multiletter control sequences out of 15000+600000
+ 568406 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,308b,540s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,8n,79p,437b,540s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\amywi\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
 1200.pk><C:/Users/amywi/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
 ts/cm/cmbx12.pfb><C:/Users/amywi/AppData/Local/Programs/MiKTeX/fonts/type1/publ
 ic/amsfonts/cm/cmr10.pfb><C:/Users/amywi/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/public/amsfonts/cm/cmr12.pfb><C:/Users/amywi/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on report.pdf (6 pages, 504836 bytes).
+fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/amywi/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/amywi/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on report.pdf (8 pages, 629560 bytes).
 PDF statistics:
- 145 PDF objects out of 1000 (max. 8388607)
- 25 named destinations out of 1000 (max. 500000)
- 135 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 181 PDF objects out of 1000 (max. 8388607)
+ 34 named destinations out of 1000 (max. 500000)
+ 155 words of extra memory for PDF output out of 10000 (max. 10000000)
 

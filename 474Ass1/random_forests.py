@@ -83,8 +83,8 @@ plt.title('Feature Importances')
 
 # Number of Trees vs Error
 plt.figure(figsize=(10, 5))
-plt.plot(n_estimators_range, errors_n_estimators, marker='o', linestyle='-', color='b', label="Test Error")
-
+plt.plot(n_estimators_range, train_errors_n_estimators, marker='o', linestyle='-', label="Training Error")
+plt.plot(n_estimators_range, errors_n_estimators, marker='o', linestyle='-', label="Test Error")
 plt.xlabel("Number of Trees (n_estimators)")
 plt.ylabel("Error Rate")
 plt.title("Number of Trees vs. Error Rate")
@@ -94,8 +94,8 @@ plt.grid()
 
 # Max Depth vs Error
 plt.figure(figsize=(10, 5))
-plt.plot(max_depth_range, errors_max_depth, marker='s', linestyle='-', color='r', label="Test Error")
-
+plt.plot(max_depth_range, train_errors_max_depth, marker='s', linestyle='-', label="Training Error")
+plt.plot(max_depth_range, errors_max_depth, marker='s', linestyle='-', label="Test Error")
 plt.xlabel("Max Depth")
 plt.ylabel("Error Rate")
 plt.title("Max Depth vs. Error Rate")

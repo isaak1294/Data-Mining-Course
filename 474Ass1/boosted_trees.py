@@ -36,28 +36,36 @@ adaboost_classifier = AdaBoostClassifier(
 )
 
 # Define hyperparameter ranges
-n_estimators_range = range(1, 201, 10)  # Number of trees
+n_estimators_range = range(1, 201, 20)  # Number of trees
 learning_rate_range = range(1, 10)  # Max depth
 
 # Store error rates
 errors_n_estimators = []
+train_errors_n_estimators = []
 errors_learning_rate = []
+train_errors_learning_rate = []
 
 for n in n_estimators_range:
-    clf = AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=1), 
+    clf = AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1), 
                              n_estimators=n, random_state=42)
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     error = 1 - accuracy_score(y_test, y_pred)
+    y_pred = clf.predict(X_train)
+    train_error = 1 - accuracy_score(y_train, y_pred)
     errors_n_estimators.append(error)
+    train_errors_n_estimators.append(train_error)
 
 for l in learning_rate_range:
-    clf = AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=1),
+    clf = AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=1),
                               n_estimators=50, learning_rate=l*0.1, random_state=42)
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     error = 1 - accuracy_score(y_test, y_pred)
+    y_pred = clf.predict(X_train)
+    train_error = 1 - accuracy_score(y_train, y_pred)
     errors_learning_rate.append(error)
+    train_errors_learning_rate.append(train_error)
 
 # Train ada
 adaboost_classifier.fit(X_train, y_train)
@@ -81,11 +89,24 @@ plt.title('Feature Importances')
 
 # Number of Trees vs Error
 plt.figure(figsize=(10, 5))
-plt.plot(n_estimators_range, errors_n_estimators, marker='o', linestyle='-', color='b', label="Test Error")
+plt.plot(n_estimators_range, train_errors_n_estimators, marker='o', linestyle='-', label="Training Error")
+plt.plot(n_estimators_range, errors_n_estimators, marker='o', linestyle='-', label="Test Error")
 plt.xlabel("Number of Rounds (n_estimators)")
 plt.ylabel("Error Rate")
-plt.title("Number of Trees vs. Error Rate")
+plt.title("Number of Rounds vs. Error Rate")
 plt.legend()
 plt.grid()
+plt.savefig('figures/round_vs_error.png', dpi=300, bbox_inches='tight')
+
+# Number of Trees vs Error
+plt.figure(figsize=(10, 5))
+plt.plot(learning_rate_range, train_errors_learning_rate, marker='o', linestyle='-', label="Test Error")
+plt.plot(learning_rate_range, errors_learning_rate, marker='o', linestyle='-', label="Test Error")
+plt.xlabel("Contributions of each classifier")
+plt.ylabel("Error Rate")
+plt.title("Classifier contribution vs. Error Rate")
+plt.legend()
+plt.grid()
+plt.savefig('figures/learn_rate_vs_error.png', dpi=300, bbox_inches='tight')
 
 plt.show()
