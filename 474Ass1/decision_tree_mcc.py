@@ -1,6 +1,6 @@
 ## Data Mining - Fall 2023 (author: Nishant Mehta)
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.utils import check_random_state  
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -72,13 +72,23 @@ ccp_alphas = ccp_alphas[:-1]
 train_scores = [clf.score(X_train, y_train) for clf in trees]
 test_scores = [clf.score(X_test, y_test) for clf in trees]
 
+feature_names = [f"Feature {i}" for i in range(X.shape[1])]  # Generic feature names
+class_names = [str(cls) for cls in np.unique(y)]  # Unique class labels as strings
+
 fig, ax = plt.subplots()
 ax.set_xlabel("alpha")
 ax.set_ylabel("accuracy")
-ax.set_title("Accuracy vs alpha for training and testing sets")
+ax.set_title("Accuracy vs alpha (minimum cost complexity pruning)")
 ax.plot(ccp_alphas, train_scores, marker="o", label="train", drawstyle="steps-post")
 ax.plot(ccp_alphas, test_scores, marker="o", label="test", drawstyle="steps-post")
 ax.legend()
+
+for i, t in enumerate(test_scores):
+    print(f"index: {i}, score: {t}")
+
+plt.figure(figsize=(12, 8))
+plot_tree(trees[10], filled=True, feature_names=feature_names, class_names=class_names)
+
 plt.show()
 
 

@@ -7,7 +7,6 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import copy
 
-
 def calculate_gini(y):
     classes, counts = np.unique(y, return_counts=True)
     probabilities = counts/counts.sum()
@@ -24,65 +23,7 @@ def calculate_split_gini(y_left, y_right):
     weighted_gini = (n_left/n_total) * gini_left + (n_right/n_total) * gini_right
     return weighted_gini
 
-
-def reduced_error_pruning(tree, X_val, y_val):
-    """
-    Parameters:
-    - tree: un-pruned decision tree
-    - X_val: Data
-    - y_val: Target
-
-    Returns:
-    - void: prunes tree using reduced error pruning
-
-    I arbitrarily tested a few accuracies and looked at how it changed the tree.
-    I'm not sure what this type of pruning is called, or if it has a name, or if
-    it's fundamentally flawed. But I thought it was interesting that I could increase the accuracy
-    of the tree this way.
-    """
-    # Recursive pruning function:
-    def prune(node_index):
-        if not hasattr(tree.tree_, "children_left"):
-            return
-        
-        # Get left and right child indices:
-        left_child = tree.tree_.children_left[node_index]
-        right_child = tree.tree_.children_right[node_index]
-
-        # If node is a leaf, return
-        if left_child == -1 and right_child == -1:
-            return
-        
-        # Prune left and right trees recursively
-        if left_child != -1:
-            prune(left_child)
-        if right_child != -1:
-            prune(right_child)
-
-        original_left = tree.tree_.children_left[node_index]
-        original_right = tree.tree_.children_right[node_index]
-
-        # Get the pre-pruning accuracy for comparison
-        pre_prediction = tree.predict(X_val)
-        pre_accuracy = accuracy_score(y_val, pre_prediction)
-
-        # Make the current node a leaf
-        tree.tree_.children_left[node_index] = -1
-        tree.tree_.children_right[node_index] = -1
-
-        # Get the post-pruning accuracy for comparison
-        post_prediction = tree.predict(X_val)
-        post_accuracy = accuracy_score(y_val, post_prediction)
-
-        # If the tree got less accurate, go back
-        if post_accuracy < pre_accuracy * 0.999:
-            tree.tree_.children_left[node_index] = original_left
-            tree.tree_.children_right[node_index] = original_right
-
-    # Start pruning at the root
-    prune(0)
-
-def prune_with_gini(tree, node_id, alpha=0.01):
+def prune_with_gini(tree, node_id, alpha):
     """
     Prunes a decision tree using a Gini-based criterion with a gain threshold.
 
@@ -148,32 +89,29 @@ X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size = 0.2
 tree = DecisionTreeClassifier()
 tree.fit(X_train, y_train)
 
-copy1 = copy.deepcopy(tree)
-copy2 = copy.deepcopy(tree)
 
-# Get the accuracy before for analysis
-accuracy_before = accuracy_score(y_test, tree.predict(X_test))
-print(f"Accuracy before pruning: {accuracy_before:.2f}")
 
-# Do the pruning
-reduced_error_pruning(copy1, X_train, y_train)
+trees = [copy.deepcopy(tree)] * 100
+test_accuracies = []
+train_accuracies = []
+error_cutoffs = []
 
-# Get the accuracy after pruning
-accuracy_after = accuracy_score(y_test, copy1.predict(X_test))
-print(f"Accuracy after reduced error pruning: {accuracy_after:.2f}")
+for i in range(20):
+    prune_with_gini(trees[i].tree_, 0, i * 0.001)
+    y_pred = trees[i].predict(X_test)
+    y_train_pred = trees[i].predict(X_train)
+    test_accuracies.append(accuracy_score(y_test, y_pred))
+    train_accuracies.append(accuracy_score(y_train, y_train_pred))
+    error_cutoffs.append(i * 0.001)
 
-prune_with_gini(copy2.tree_, 0)
 
-accuracy_after = accuracy_score(y_test, copy2.predict(X_test))
-print(f"Accuracy after reduced error pruning with gini index: {accuracy_after:.2f}")
-
-plt.figure(figsize=(12, 8))
-plot_tree(tree, filled=True, feature_names=feature_names, class_names=class_names)
-
-plt.figure(figsize=(12, 8))
-plot_tree(copy1, filled=True, feature_names=feature_names, class_names=class_names)
-
-plt.figure(figsize=(12, 8))
-plot_tree(copy2, filled=True, feature_names=feature_names, class_names=class_names)
+plt.figure(figsize=(10, 5))
+plt.plot(error_cutoffs, train_accuracies, marker='o', linestyle='-', label="Train Error")
+plt.plot(error_cutoffs, test_accuracies, marker='o', linestyle='-', label="Test Error")
+plt.xlabel("Alpha")
+plt.ylabel("Accuracy")
+plt.title("Alpha vs Accuracy (Gini Index Pruning)")
+plt.legend()
+plt.grid()
 
 plt.show()
