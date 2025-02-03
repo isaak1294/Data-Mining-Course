@@ -1,55 +1,105 @@
 import numpy as np
 from sklearn.utils.validation import check_random_state
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 
-## This is some dummy data just so you have a complete working example
+# Load your dataset here (replace with actual data loading)
+# X, Y = ... (features and labels)
 
-X = [[0, 0], [1, 1], [0, 0], [1, 1],[0, 0], [1, 1], [0, 0], [1, 1]]
-Y = [0, 1, 1, 0, 0, 1, 1, 0]
-M = 10 # number of trees in random forest
-rf = RandomForestClassifier(n_estimators = M, random_state = 0)
-rf = rf.fit(X, Y)
-n_samples = len(X)
-n_samples_bootstrap = n_samples
+# Retreive the data from the csv
+data = np.genfromtxt('spambase_augmented.csv', delimiter=',', skip_header=0, filling_values=np.nan)
 
+# Target the last column (whether the email was spam or not)
+X = data[:, :-1]
+y = data[:, -1]
 
-## THE ACTUAL STARTER CODE YOU SHOULD GRAB BEGINS BELOW
+# Preprocessing
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-## Assumptions
-#    - n_samples is the number of examples
-#    - n_samples_bootstrap is the number of samples in each bootstrap sample
-#      (this should be equal to n_samples)
-#    - rf is a random forest, obtained via a call to
-#      RandomForestClassifier(...) in scikit-learn
+# Split data into training sets 80/20
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size = 0.2, random_state=69)
 
-unsampled_indices_for_all_trees= []
-for estimator in rf.estimators_:
-    random_instance = check_random_state(estimator.random_state)
-    sample_indices = random_instance.randint(0, n_samples, n_samples_bootstrap)
-    sample_counts = np.bincount(sample_indices, minlength = n_samples)
+# Parameters
+n_estimators = 200  # Total number of trees
+random_state = 42    # Fixed random state for reproducibility
+
+# Train the Random Forest
+rf = RandomForestClassifier(
+    n_estimators=n_estimators,
+    random_state=random_state,
+    bootstrap=True,
+    oob_score=False,  # We compute OOB manually
+    warm_start=False
+)
+rf.fit(X, y)
+
+# Get the number of samples
+n_samples = X.shape[0]
+
+# Collect OOB indices and predictions for each tree
+unsampled_indices_for_all_trees = []
+oob_predictions_per_tree = []
+
+for tree in rf.estimators_:
+    # Get OOB indices for the current tree
+    random_instance = check_random_state(tree.random_state)
+    sample_indices = random_instance.randint(0, n_samples, n_samples)
+    sample_counts = np.bincount(sample_indices, minlength=n_samples)
     unsampled_mask = sample_counts == 0
-    indices_range = np.arange(n_samples)
-    unsampled_indices = indices_range[unsampled_mask]
-    unsampled_indices_for_all_trees += [unsampled_indices]
+    unsampled_indices = np.where(unsampled_mask)[0]
+    unsampled_indices_for_all_trees.append(unsampled_indices)
+    
+    # Get predictions for OOB samples
+    if len(unsampled_indices) > 0:
+        X_oob = X[unsampled_indices]
+        preds = tree.predict(X_oob)
+    else:
+        preds = np.array([])
+    oob_predictions_per_tree.append((unsampled_indices, preds))
 
-## Result:
-#    unsampled_indices_for_all_trees is a list with one element for each tree
-#    in the forest. In more detail, the j'th element is an array of the example
-#    indices that were \emph{not} used in the training of j'th tree in the
-#    forest. For examle, if the 1st tree in the forest was trained on a
-#    bootstrap sample that was missing only the first and seventh training
-#    examples (corresponding to indices 0 and 6), and if the last tree in the
-#    forest was trained on a boostrap sample that was missing the second,
-#    third, and sixth training examples (indices 1, 2, and 5), then
-#    unsampled_indices_for_all_trees would begin like:  
-#        [array([0, 6]),
-#         ...
-#         array([1, 2, 5])]
+# Map each example to its OOB predictions and corresponding tree indices
+example_oob_preds = [[] for _ in range(n_samples)]
+for tree_idx, (oob_indices, preds) in enumerate(oob_predictions_per_tree):
+    for i, example_idx in enumerate(oob_indices):
+        example_oob_preds[example_idx].append((tree_idx, preds[i]))
 
-print(unsampled_indices_for_all_trees)
+# Compute OOB error for increasing numbers of trees
+oob_errors = []
+for t in range(1, n_estimators + 1):
+    error_sum = 0.0
+    n_valid_examples = 0
+    
+    for example_idx in range(n_samples):
+        # Collect all predictions from trees < t where the example was OOB
+        preds = []
+        for (tree_idx, pred) in example_oob_preds[example_idx]:
+            if tree_idx < t:
+                preds.append(pred)
+        
+        if len(preds) == 0:
+            continue  # Skip examples with no OOB predictions
+        
+        # Majority vote
+        majority_vote = np.argmax(np.bincount(preds))
+        if majority_vote != y[example_idx]:
+            error_sum += 1
+        n_valid_examples += 1
+    
+    if n_valid_examples > 0:
+        oob_error = error_sum / n_valid_examples
+    else:
+        oob_error = 0.0  # Handle edge case with no OOB samples
+    oob_errors.append(oob_error)
+
+# Plot OOB error vs. number of trees
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, n_estimators + 1), oob_errors, marker='o', linestyle='-', markersize=3)
+plt.xlabel('Number of Trees')
+plt.ylabel('OOB Error')
+plt.title('Out-of-Bag Error Estimate vs. Number of Trees')
+plt.grid(True)
+plt.show()

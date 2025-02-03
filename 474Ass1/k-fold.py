@@ -104,13 +104,13 @@ for n_trees in n_trees_range:
 
 
     ada = AdaBoostClassifier(
-        base_estimator=base_estimator,
+        estimator=base_estimator,
         n_estimators=n_trees,
         learning_rate=learning_rate,
         random_state=42
     )
     fold_scores, avg_score = k_fold(X, y, clf)
-    cv_scores.append(avg_score)
+    ada_cv_scores.append(avg_score)
 
 
 
@@ -124,7 +124,7 @@ plt.grid(True)
 plt.savefig('figures/ensemble_size_tuning.png', dpi=300, bbox_inches='tight')
 
 plt.figure(figsize=(8, 4))
-plt.plot(n_trees_range, cv_scores, marker='o', linestyle='--', color='b')
+plt.plot(n_trees_range, ada_cv_scores, marker='o', linestyle='--', color='b')
 plt.xlabel('Number of Stumps (n_estimators)')
 plt.ylabel('Cross-Validated Accuracy')
 plt.title('AdaBoost: Ensemble Size Tuning')

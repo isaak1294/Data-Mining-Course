@@ -21,39 +21,38 @@
 
 % Section 1: Introduction
 \section{Introduction}
-A binary classification was performed on a spam-email dataset from Spambase to determine whether an email was spam or not using multiple different statistical learning models. Models were implemented using SciKitLearn and numpy, and graphs were generated using MatPlotLib.
+A binary classification task was performed on the Spambase dataset to distinguish between spam and non-spam emails using various statistical learning models. The models were implemented using SciKit-Learn and NumPy, and visualizations were generated using Matplotlib. The goal of this analysis was to evaluate the performance of different machine learning techniques, including decision trees, random forests, and boosted decision stumps, in classifying emails. The dataset, sourced from the UCI Machine Learning Repository, contains features derived from email content, such as word frequencies and special characters, making it suitable for binary classification tasks.
 
+---
 
 % Section 2: Results and Analysis
 \section{Part I: Separate Analysis}
-The separate analysis section includes the methods/models used and their individual performances. For each model, multiple approaches were taken in an attempt to determine the best ways to fit each model to this dataset.
+This section details the individual performance of each model and the approaches taken to optimize their performance on the dataset. For each model, multiple configurations and pruning techniques were explored to identify the best fit for the data.
 
 \subsection{Decision Trees}
-
-Decision trees were implemented in 4 different ways:
-
+Decision trees were implemented using four different pruning techniques to evaluate their impact on model performance and complexity:
 \begin{itemize}
-    \item No pruning
-    \item Minimum Cost-Complexity Pruning
-    \item Reduced Error Pruning (Gini Index)
-    \item Reduced Error Pruning (Just error as index)
+    \item \textbf{No pruning}: A fully grown tree without any constraints, which often leads to overfitting.
+    \item \textbf{Minimum Cost-Complexity Pruning}: A method that balances tree complexity and accuracy by introducing a penalty for additional nodes.
+    \item \textbf{Reduced Error Pruning (Gini Index)}: Pruning based on the Gini impurity measure, which minimizes misclassification.
+    \item \textbf{Reduced Error Pruning (Just Error)}: Pruning based solely on classification error.
 \end{itemize}
 
-In figure 1, you can see each of the decision trees after they have completely finished training. The pruned trees, of course, are considerable smaller than the non-pruned tree.
+Figure \ref{fig:comparison} illustrates the resulting decision trees for each pruning method. The pruned trees are significantly smaller and less complex than the unpruned tree, demonstrating the effectiveness of pruning in reducing overfitting.
 
 \begin{figure}[htbp]
     \centering
     % First row of graphs (2 graphs side by side)
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/raw_tree.png}  % Replace with your image
+        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/raw_tree.png}
         \caption{Raw Tree}
         \label{fig:method1}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/ccp tree.png}  % Replace with your image
+        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/ccp tree.png}
         \caption{Cost-Complexity Pruning Tree}
         \label{fig:method2}
     \end{subfigure}
@@ -62,28 +61,26 @@ In figure 1, you can see each of the decision trees after they have completely f
     \vskip\baselineskip  % Adds a line break between rows
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/error_tree.png}  % Replace with your image
+        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/error_tree.png}
         \caption{Reduced Error Tree}
         \label{fig:method3}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/gini tree.png}  % Replace with your image
+        \includegraphics[width=\linewidth]{figures/Reduced Error Pruning/gini tree.png}
         \caption{Gini Index Tree}
         \label{fig:method4}
     \end{subfigure}
 
-    \caption{Comparison of Different Training Methods}
+    \caption{Comparison of Decision Trees with Different Pruning Methods}
     \label{fig:comparison}
 \end{figure}
 
+To determine the optimal pruning parameters, the relationship between the pruning parameter (alpha) and model accuracy was analyzed. Figures \ref{fig:mcc}, \ref{fig:gini}, and \ref{fig:error} show these relationships for each pruning method.
 
-For each of the trees displayed in the figure, I used a cutoff value that made sure that they were pruned close to optimally. In order to find these cutoff values, I plotted the respective alphas of the pruning methods against the accuracies that implementing them produced.
-
-\subsubsection{Minimum Cost-Complexity}
-
-Here we can see the relationship between alpha and accuracy for Minimum Cost-Complexity Pruning:
+\subsubsection{Minimum Cost-Complexity Pruning}
+Figure \ref{fig:mcc} shows the trade-off between alpha and accuracy for minimum cost-complexity pruning. As alpha increases, the tree becomes simpler, but accuracy may decrease if pruning is too aggressive.
 
 \begin{figure}[h!]
     \centering
@@ -93,8 +90,7 @@ Here we can see the relationship between alpha and accuracy for Minimum Cost-Com
 \end{figure}
 
 \subsubsection{Reduced Error Pruning (Gini Index)}
-
-Here we can see the relationship between alpha and accuracy for Reduced Error Pruning using the Gini Index:
+Figure \ref{fig:gini} illustrates the relationship between alpha and accuracy for reduced error pruning using the Gini index. The Gini index measures the likelihood of misclassification, and pruning based on this metric helps balance accuracy and complexity.
 
 \begin{figure}[h!]
     \centering
@@ -104,8 +100,7 @@ Here we can see the relationship between alpha and accuracy for Reduced Error Pr
 \end{figure}
 
 \subsubsection{Reduced Error Pruning (Just Error)}
-
-Here we can see the relationship between alpha and accuracy for Reduced Error Pruning using just error:
+Figure \ref{fig:error} shows the relationship between alpha and accuracy for reduced error pruning based solely on classification error. This method is simpler but may not always yield the best balance between accuracy and complexity.
 
 \begin{figure}[h!]
     \centering
@@ -115,8 +110,7 @@ Here we can see the relationship between alpha and accuracy for Reduced Error Pr
 \end{figure}
 
 \subsection{Random Forests}
-
-To analyze random forests, I varied ensemble size and max depth and compared the error rates that they produced.
+Random forests were analyzed by varying ensemble size (number of trees) and maximum tree depth. The importance of each feature in the dataset was also evaluated, as shown in Figure \ref{fig:mcc}. Figures \ref{fig:mcc} and \ref{fig:mcc} display the relationship between max depth, number of trees, and error rates, respectively.
 
 \begin{figure}[h!]
     \centering
@@ -140,57 +134,96 @@ To analyze random forests, I varied ensemble size and max depth and compared the
 \end{figure}
 
 \subsection{Boosted Decision Trees}
-To analyze the AdaBoost decision tress, I varied the ensemble size and the weight of each stump and compared the error rates that they produced.
+AdaBoost, a boosting algorithm, was used to analyze boosted decision stumps. The ensemble size and stump weights were varied to evaluate their impact on error rates. This method combines multiple weak learners to create a strong classifier, often achieving higher accuracy than individual decision trees.
 
-\section{Part II: Comparative Analysis}
-Compare Random Forests and Boosted Decision Stumps:
-\begin{itemize}
-    \item Use k-fold cross-validation to tune the ensemble size for each method.
-    \item Present results comparing test errors for the tuned versions of each method.
-\end{itemize}
-
-\newpage
-% Section 4: Out-of-Bag Error Estimate
-\section{Out-of-Bag Error Estimate}
-Explain and present results for the OOB error estimate for Random Forests. Include:
-\begin{itemize}
-    \item Implementation details.
-    \item Plot of OOB error vs. number of trees.
-    \item Discussion of findings.
-\end{itemize}
-
-\subsection*{Implementation Details}
-The OOB error estimate was computed using a Random Forest classifier with \texttt{n\_estimators} ranging from 10 to 200. 
-Hyperparameters such as \texttt{max\_depth} and \texttt{max\_features} were set to default values, and the OOB error was 
-enabled via \texttt{oob\_score=True}. For each tree count, the OOB error was calculated as \( 1 - \text{oob\_score} \), where 
-\texttt{oob\_score} represents the classification accuracy on out-of-bag samples.
-
-\subsection*{Results}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\linewidth]{figures/oob_error_plot.png}
+    \includegraphics[width=0.8\linewidth]{figures/Boosted Trees/Feature Importance.png}
+    \caption{AdaBoost Feature Importance}
+    \label{fig:mcc}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/Boosted Trees/learn_rate_vs_error.png}
+    \caption{Max stump size vs training and test error rate}
+    \label{fig:mcc}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/Boosted Trees/round_vs_error.png}
+    \caption{Number of stumps vs training and test error rate}
+    \label{fig:mcc}
+\end{figure}
+---
+
+\section{Part II: Comparative Analysis}
+This section compares the performance of random forests and boosted decision stumps. Key steps included:
+\begin{itemize}
+    \item Using k-fold cross-validation to tune the ensemble size for each method.
+    \item Comparing test errors for the tuned versions of each method.
+\end{itemize}
+The graphs look the same. I'm pretty sure they're unique.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/k-fold/ensemble_size_tuning.png}
+    \caption{Random Forest Ensemble Size Tuning}
+    \label{fig:mcc}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/ada_ensemble_size_tuning.png}
+    \caption{AdaBoost Ensemble Size Tuning}
+    \label{fig:mcc}
+\end{figure}
+
+---
+
+\section{Out-of-Bag Error Estimate}
+The out-of-bag (OOB) error estimate provides an unbiased measure of the generalization error for random forests. This section details the implementation and results of the OOB error analysis.
+
+\subsection*{Implementation Details}
+The OOB error was computed using a Random Forest classifier with \texttt{n\_estimators} ranging from 10 to 200. Hyperparameters such as \texttt{max\_depth} and \texttt{max\_features} were set to default values, and the OOB error was enabled via \texttt{oob\_score=True}. For each tree count, the OOB error was calculated as \( 1 - \text{oob\_score} \), where \texttt{oob\_score} represents the classification accuracy on out-of-bag samples.
+
+\subsection*{Results}
+Figure \ref{fig:oob_error} shows the OOB error as a function of the number of trees. The error stabilizes beyond approximately 100 trees, indicating that further increases in tree count yield minimal improvement.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/OOB_error.png}
     \caption{OOB Error vs. Number of Trees in the Random Forest. The error stabilizes as the number of trees increases, indicating convergence.}
     \label{fig:oob_error}
 \end{figure}
 
 \subsection*{Discussion}
-The OOB error stabilizes beyond approximately 100 trees, suggesting that further increases in tree count yield minimal improvement. This aligns with the theoretical expectation that Random Forests benefit from averaging over a large ensemble but exhibit diminishing returns. The final OOB error of 0.12 (12\%) closely matches the test error, confirming its utility as a reliable generalization estimate.
+The OOB error stabilizes at around 12\%, closely matching the test error. This confirms the utility of the OOB error as a reliable estimate of generalization performance without the need for a separate validation set.
 
-% Section 5: Conclusion
+---
+
 \section{Conclusion}
-Summarize key findings from the analysis. Discuss strengths and weaknesses of the methods and potential improvements.
-
-% Section 6: References
-\section{References}
-List any references used, including:
+This analysis evaluated the performance of decision trees, random forests, and boosted decision stumps on the Spambase dataset. Key findings include:
 \begin{itemize}
-    \item Dataset sources (e.g., UCI repository)
-    \item Relevant libraries or documentation (e.g., scikit-learn)
+    \item Pruning techniques significantly reduce overfitting in decision trees.
+    \item Random forests achieve robust performance, with feature importance providing insights into the dataset.
+    \item Boosted decision stumps, while computationally intensive, often yield higher accuracy.
+\end{itemize}
+Potential improvements include exploring additional hyperparameters and ensemble methods, as well as using larger datasets for more robust evaluation.
+
+---
+
+\section{References}
+\begin{itemize}
+    \item Spambase Dataset: \href{https://archive.ics.uci.edu/ml/datasets/Spambase}{UCI Machine Learning Repository}
+    \item Scikit-learn Documentation: \href{https://scikit-learn.org/}{scikit-learn}
 \end{itemize}
 
-% Section 7: Appendix
+---
+
 \appendix
 \section{Appendix}
-Include supplementary materials, additional plots, or code snippets if needed.
+Supplementary materials, including additional plots and code snippets, are provided in the appendix.
 
 \end{document}
