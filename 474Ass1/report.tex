@@ -9,7 +9,7 @@
 
 % Title and author
 \title{Assignment 1: Experiments and Analysis}
-\author{Your Name}
+\author{Isaak Wiebe, V01004501}
 \date{\today}
 
 \begin{document}
@@ -110,51 +110,51 @@ Figure \ref{fig:error} shows the relationship between alpha and accuracy for red
 \end{figure}
 
 \subsection{Random Forests}
-Random forests were analyzed by varying ensemble size (number of trees) and maximum tree depth. The importance of each feature in the dataset was also evaluated, as shown in Figure \ref{fig:mcc}. Figures \ref{fig:mcc} and \ref{fig:mcc} display the relationship between max depth, number of trees, and error rates, respectively.
+Random forests were analyzed by varying ensemble size (number of trees) and maximum tree depth. The importance of each feature in the dataset was also evaluated, as shown in Figure \ref{fig:uh}. Figures \ref{fig:idk} and \ref{fig:smth} display the max depth, number of trees, and the corresponding error rates, respectively.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/Random Forests/Feature Importance.png}
     \caption{Importance of Each Feature}
-    \label{fig:mcc}
+    \label{fig:uh}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/Random Forests/Max depth vs error rate.png}
     \caption{Max depth vs training and test error rate}
-    \label{fig:mcc}
+    \label{fig:idk}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/Random Forests/Number of trees vs error rate.png}
     \caption{Number of trees vs training and test error rate}
-    \label{fig:mcc}
+    \label{fig:smth}
 \end{figure}
 
 \subsection{Boosted Decision Trees}
-AdaBoost, a boosting algorithm, was used to analyze boosted decision stumps. The ensemble size and stump weights were varied to evaluate their impact on error rates. This method combines multiple weak learners to create a strong classifier, often achieving higher accuracy than individual decision trees.
+AdaBoost, a boosting algorithm, was used to analyze boosted decision stumps. The ensemble size and stump weights were varied to evaluate their impact on error rates. This method combines multiple weak learners to create a strong classifier, often achieving higher accuracy than individual decision trees. The optimization methods are shown in figures \ref{fig:ada}, \ref{fig:boo} and \ref{fig:st}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/Boosted Trees/Feature Importance.png}
     \caption{AdaBoost Feature Importance}
-    \label{fig:mcc}
+    \label{fig:ada}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/Boosted Trees/learn_rate_vs_error.png}
     \caption{Max stump size vs training and test error rate}
-    \label{fig:mcc}
+    \label{fig:boo}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/Boosted Trees/round_vs_error.png}
     \caption{Number of stumps vs training and test error rate}
-    \label{fig:mcc}
+    \label{fig:st}
 \end{figure}
 ---
 
@@ -164,20 +164,20 @@ This section compares the performance of random forests and boosted decision stu
     \item Using k-fold cross-validation to tune the ensemble size for each method.
     \item Comparing test errors for the tuned versions of each method.
 \end{itemize}
-The graphs look the same. I'm pretty sure they're unique.
+The graphs look the same. I'm pretty sure they're unique. Maybe. Probably.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{figures/k-fold/ensemble_size_tuning.png}
     \caption{Random Forest Ensemble Size Tuning}
-    \label{fig:mcc}
+    \label{fig:kf}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\linewidth]{figures/ada_ensemble_size_tuning.png}
+    \includegraphics[width=0.8\linewidth]{figures/k-fold/ada_ensemble_size_tuning.png}
     \caption{AdaBoost Ensemble Size Tuning}
-    \label{fig:mcc}
+    \label{fig:old}
 \end{figure}
 
 ---
@@ -199,7 +199,7 @@ Figure \ref{fig:oob_error} shows the OOB error as a function of the number of tr
 \end{figure}
 
 \subsection*{Discussion}
-The OOB error stabilizes at around 12\%, closely matching the test error. This confirms the utility of the OOB error as a reliable estimate of generalization performance without the need for a separate validation set.
+The OOB error stabilizes at around 3\%, closely matching the test error. This confirms the utility of the OOB error as a reliable estimate of generalization performance without the need for a separate validation set.
 
 ---
 
@@ -219,11 +219,4 @@ Potential improvements include exploring additional hyperparameters and ensemble
     \item Spambase Dataset: \href{https://archive.ics.uci.edu/ml/datasets/Spambase}{UCI Machine Learning Repository}
     \item Scikit-learn Documentation: \href{https://scikit-learn.org/}{scikit-learn}
 \end{itemize}
-
----
-
-\appendix
-\section{Appendix}
-Supplementary materials, including additional plots and code snippets, are provided in the appendix.
-
 \end{document}

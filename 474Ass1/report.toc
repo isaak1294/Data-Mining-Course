@@ -1,13 +1,12 @@
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
 \contentsline {section}{\numberline {2}Part I: Separate Analysis}{2}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Decision Trees}{2}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Minimum Cost-Complexity}{2}{subsubsection.2.1.1}%
-\contentsline {subsubsection}{\numberline {2.1.2}Reduced Error Pruning (Gini Index)}{4}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.1}Minimum Cost-Complexity Pruning}{3}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Reduced Error Pruning (Gini Index)}{3}{subsubsection.2.1.2}%
 \contentsline {subsubsection}{\numberline {2.1.3}Reduced Error Pruning (Just Error)}{4}{subsubsection.2.1.3}%
 \contentsline {subsection}{\numberline {2.2}Random Forests}{5}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Boosted Decision Trees}{6}{subsection.2.3}%
-\contentsline {section}{\numberline {3}Part II: Comparative Analysis}{6}{section.3}%
-\contentsline {section}{\numberline {4}Out-of-Bag Error Estimate}{7}{section.4}%
-\contentsline {section}{\numberline {5}Conclusion}{7}{section.5}%
-\contentsline {section}{\numberline {6}References}{8}{section.6}%
-\contentsline {section}{\numberline {A}Appendix}{8}{appendix.A}%
+\contentsline {section}{\numberline {3}Part II: Comparative Analysis}{7}{section.3}%
+\contentsline {section}{\numberline {4}Out-of-Bag Error Estimate}{8}{section.4}%
+\contentsline {section}{\numberline {5}Conclusion}{10}{section.5}%
+\contentsline {section}{\numberline {6}References}{10}{section.6}%
