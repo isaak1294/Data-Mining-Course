@@ -3,7 +3,8 @@ import mnist_reader
 from sklearn.preprocessing import normalize
 import neural_networks
 import svms
-import torch
+from matplotlib import pyplot as plt
+import evaluation
 
 datapath = 'fashion-mnist-master/data/fashion'
 
@@ -12,7 +13,7 @@ def add_label_noise(y, p = 0.269):
     y_noisy = y.copy()
     y_noisy[flip_mask] = 1 - y_noisy[flip_mask]
 
-    return y
+    return y_noisy
 
 X_train, y_train = mnist_reader.load_mnist(datapath, kind='train')
 X_test, y_test = mnist_reader.load_mnist(datapath, kind='t10k')
@@ -39,6 +40,9 @@ y_test_binary = np.where(y_test_binary == 5, 0, 1)
 # Make noisy
 y_train_binary = add_label_noise(y_train_binary)
 
+X_train_binary_small = X_train_binary[:1000]
+y_train_binary_small = y_train_binary[:1000]
+
 # Print dataset shape
 print(f"Training set shape: {X_train_binary.shape}, Labels shape: {y_train_binary.shape}")
 print(f"Test set shape: {X_test_binary.shape}, Labels shape: {y_test_binary.shape}")
@@ -47,24 +51,59 @@ svm = svms.SVMClassifier(kernel="rbf", C=1.0, gamma="scale")
 svm.train(X_train_binary, y_train_binary)
 print("SVM Accuracy:", svm.accuracy(X_test_binary, y_test_binary))
 
-# Neural Network Training
-input_size = 784  # Fashion-MNIST flattened images
-hidden_size = 128  # Can be tuned
-output_size = 2  # Binary classification (classes 5 and 7)
-
-# Convert NumPy arrays to PyTorch tensors
-X_train_tensor = torch.tensor(X_train_binary, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train_binary, dtype=torch.long)
-X_test_tensor = torch.tensor(X_test_binary, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test_binary, dtype=torch.long)
-
-# Initialize and train
-nn_model = neural_networks.NeuralNet(input_size, hidden_size, output_size)
-neural_networks.train_neural_net(nn_model, X_train_tensor, y_train_tensor, epochs=20, lr=0.001)
-
-# Evaluate
-nn_accuracy = neural_networks.evaluate_neural_net(nn_model, X_test_tensor, y_test_tensor)
-print("Neural Network Accuracy:", nn_accuracy)
-
 svm = svms.SVMClassifier(kernel="linear")
-svm.log_tune(X_train_binary, y_train_binary, B=2, C0=0.01, k=5)
+svm.log_tune(X_train_binary_small, y_train_binary_small, B=1.5, C0=0.05, k=5)
+
+C_values = [0.1 * (1.2 ** i) for i in range(30)]
+test_scores = []
+train_scores = []
+
+best_score = -np.inf
+for C in C_values:
+        model = svms.SVMClassifier(kernel="linear", C=C)
+        test_score = model.score(X_test_binary, y_test_binary)
+        train_scores.append(model.score(X_train_binary, y_train_binary))
+        test_scores.append(test_score)
+
+        # Update best C
+        if  test_score > best_score:
+            best_score = test_score
+            best_C = C
+            best_linear_svm = model
+
+
+fig, ax = plt.subplots()
+ax.set_xlabel("Regularization Parameter (C)")
+ax.set_ylabel("Accuracy")
+ax.set_title("Accuracy vs C")
+ax.plot(C_values, train_scores, marker="o", label="train", drawstyle="steps-post")
+ax.plot(C_values, test_scores, marker="o", label="test", drawstyle="steps-post")
+ax.legend()
+
+print(f"\nBest C: {best_C:.5f} with accuracy {best_score:.4f}")
+
+best_gaus_svm, best_gamma, best_gaus_C = svms.tune_gaussian_svm(X_train_binary_small, y_train_binary_small, X_test_binary, y_test_binary)
+
+best_gaus_params = (best_gamma, best_gaus_C)
+
+print(f"Best linear SVM score: {best_linear_svm.score(X_test, y_test)}")
+print(f"Best gaussian SVM score: {best_gaus_svm.score(X_test, y_test)}")
+
+
+hidden_layer_options = [(10,), (50,), (100,), (50, 50)]
+activation_functions = ['relu', 'tanh']
+epoch_values = [10, 50, 100, 200]
+
+# Train and evaluate neural network
+best_nn, results = neural_networks.train_neural_network(X_train_binary_small, y_train_binary_small, X_test_binary, y_test_binary, hidden_layer_options, activation_functions)
+
+# Plot accuracy vs. hidden nodes
+neural_networks.plot_hidden_nodes_vs_accuracy(results)
+
+# Run controlled experiment on epochs
+neural_networks.experiment_epochs(X_train_binary_small, y_train_binary_small, X_test_binary, y_test_binary, hidden_layers=(50,), activation='relu', epoch_values=epoch_values)
+
+results = evaluation.evaluate_models(X_test_binary, y_test_binary, best_linear_svm, best_gaus_svm, best_nn)
+
+evaluation.plot_test_errors(results)
+
