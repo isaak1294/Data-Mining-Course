@@ -1,0 +1,1 @@
+Download dependencies and run 'python3 main.py'

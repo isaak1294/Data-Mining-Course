@@ -1,13 +1,11 @@
 import numpy as np
 
 
+import numpy as np
+
 def uniform_random_init(k, data):
-    centers = []
-    c = np.random.choice(data)
-    for i in range(k):
-        while c in centers:
-            c = np.random.choice(data)
-        centers.append(c)
+    indices = np.random.choice(len(data), size=k, replace=False)
+    centers = data[indices]
     return centers
 
 def k_means_init(k, data):
@@ -33,15 +31,9 @@ def k_means_init(k, data):
     
     return centers
 
-
-
-import numpy as np
-
-import numpy as np
-
 def lloyd(data, k, initialization="random", t=1e-4, max_iterations=100):
     if initialization == "random":
-        centers = uniform_random_init(data, k)
+        centers = uniform_random_init(k, data)
     elif initialization == "kmeans":
         centers = k_means_init(k, data)
     else:
